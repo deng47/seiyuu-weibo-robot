@@ -193,8 +193,8 @@ while True:
     
         
     #更新列表库           
-    if len(pool)>limit*3000:
-        pool=pool[-limit*3000:]
+    if len(pool)>limit*1000:
+        pool=pool[-limit*1000:]
                     
     #打印运行状态
     end_time=datetime.datetime.now()
