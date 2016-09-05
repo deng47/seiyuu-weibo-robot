@@ -27,23 +27,24 @@ def send(message, piclinks=[]):
                 pids += " " + pid
             else:
                 print(time.asctime( time.localtime(time.time()) ),'图片在线上传失败,暂存本地再上传',piclink)
-                res=urllib.request.Request(piclink)
-                response=urllib.request.urlopen(res)
-                img=response.read()
-                extension=re.findall(r'\.[^.\\/:*?"<>|\r\n]+$',piclink)
-                localpic=open('temp'+extension[0],'wb')
-                localpic.write(img)
-                localpic.close()
-                localpic=open('temp'+extension[0],'rb')
-                resp = session.post( uploadurl, data=localpic )
-                upload_json = re.search( '{.*}}', resp.text ).group(0)
-                result = json.loads( upload_json )
-                code = result["code"]
-                if code == "A00006":
-                    pid=(result["data"]["pics"]["pic_1"]["pid"])
-                    pids += " " + pid
-                    print(time.asctime( time.localtime(time.time()) ),'本地图片上传成功')
-                else:
+                try:
+                    res=urllib.request.Request(piclink)
+                    response=urllib.request.urlopen(res)
+                    img=response.read()
+                    extension=re.findall(r'\.[^.\\/:*?"<>|\r\n]+$',piclink)
+                    localpic=open('temp'+extension[0],'wb')
+                    localpic.write(img)
+                    localpic.close()
+                    localpic=open('temp'+extension[0],'rb')
+                    resp = session.post( uploadurl, data=localpic )
+                    upload_json = re.search( '{.*}}', resp.text ).group(0)
+                    result = json.loads( upload_json )
+                    code = result["code"]
+                    if code == "A00006":
+                        pid=(result["data"]["pics"]["pic_1"]["pid"])
+                        pids += " " + pid
+                        print(time.asctime( time.localtime(time.time()) ),'本地图片上传成功')
+                except:
                     print(time.asctime( time.localtime(time.time()) ),'本地图片上传失败','temp'+extension)
                 
                 localpic.close()                 
