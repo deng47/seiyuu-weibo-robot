@@ -118,7 +118,7 @@ while True:
     #洲崎绫now    
     try:
 
-        weibos=getnow(limit)
+        weibos=getnow(limit*2)
         for content in weibos:
             if content not in pool:                
                 message='#洲崎綾#さんのなう '+content+' http://now.ameba.jp/clown-happy/'
@@ -193,7 +193,7 @@ while True:
     
         
     #更新列表库           
-    if len(pool)>limit*30
+    if len(pool)>limit*30:
         pool=pool[-limit*30:]
                     
     #打印运行状态
