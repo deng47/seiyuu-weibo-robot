@@ -2,6 +2,7 @@ import time
 import urllib.request
 from weibo_login import *
 import re
+from poollog import *
 
 #登录微博
 (session, uid) = wblogin()
@@ -10,8 +11,9 @@ Referer = "http://www.weibo.com/u/%s/home?wvr=5" % uid
 session.headers["Referer"] = Referer
 uploadurl = "http://picupload.service.weibo.com/interface/pic_upload.php?rotate=0&app=miniblog&s=json&mime=image/jpeg&data=1&wm="
 
-def send(message, piclinks=[]):
-
+def send(count, pool, tag, each, piclinks=[]):
+    
+    message=tag+each
     pids=''
 
     if len(piclinks)>0:
@@ -26,16 +28,18 @@ def send(message, piclinks=[]):
                 pid=(result["data"]["pics"]["pic_1"]["pid"])
                 pids += " " + pid
             else:
-                print(time.asctime( time.localtime(time.time()) ),'图片在线上传失败,暂存本地再上传',piclink)
+                log(str(time.asctime( time.localtime(time.time())))+' 图片在线上传失败,尝试暂存本地再上传 '+piclink+'\n')
                 try:
                     res=urllib.request.Request(piclink)
                     response=urllib.request.urlopen(res)
                     img=response.read()
-                    extension=re.findall(r'\.[^.\\/:*?"<>|\r\n]+$',piclink)
-                    localpic=open('temp'+extension[0],'wb')
+                    log(str(time.asctime( time.localtime(time.time())))+' 读取在线图片\n')
+                    extension=re.findall(r'\.[^.\\/:*?"<>|\r\n]+$',piclink)[0]
+                    localpic=open('temp'+extension,'wb')
                     localpic.write(img)
                     localpic.close()
-                    localpic=open('temp'+extension[0],'rb')
+                    log(str(time.asctime( time.localtime(time.time())))+' 成功保存本地图片 '+'temp'+extension+'\n')
+                    localpic=open('temp'+extension,'rb')
                     resp = session.post( uploadurl, data=localpic )
                     upload_json = re.search( '{.*}}', resp.text ).group(0)
                     result = json.loads( upload_json )
@@ -43,9 +47,9 @@ def send(message, piclinks=[]):
                     if code == "A00006":
                         pid=(result["data"]["pics"]["pic_1"]["pid"])
                         pids += " " + pid
-                        print(time.asctime( time.localtime(time.time()) ),'本地图片上传成功')
+                        log(str(time.asctime( time.localtime(time.time())))+' 本地图片上传成功\n')
                 except:
-                    print(time.asctime( time.localtime(time.time()) ),'本地图片上传失败','temp'+extension)
+                    log(str(time.asctime( time.localtime(time.time())))+message[:10]+'...内容的 本地图片上传失败 '+'temp'+extension+'\n')
                 
                 localpic.close()                 
             time.sleep(5)
@@ -72,8 +76,18 @@ def send(message, piclinks=[]):
                     
             
     #发出微博
-    session.post("http://www.weibo.com/aj/mblog/add?ajwvr=6&__rnd=%d" % int( time.time() * 1000),data=data)
-    print(time.asctime( time.localtime(time.time()) ),'成功发送微博： %s' % message)
-    time.sleep(10)
+    resp = session.post("http://www.weibo.com/aj/mblog/add?ajwvr=6&__rnd=%d" % int( time.time() * 1000),data=data)
+    weibo_json = re.search( '{.*}}', resp.text ).group(0)
+    result = json.loads( weibo_json )
+    if result["code"]=='100000':
+        count+=1
+        pool.append(each)
+        save(pool)
+        log(str(time.asctime( time.localtime(time.time())))+' 成功发送微博： %s \n' % message)
+    else:
+        log("!!!!!code: "+result["code"]+' '+str(time.asctime( time.localtime(time.time())))+' 发送失败： %s !!!!!\n' % message)
+    
+    time.sleep(5)
+    return count
 
 

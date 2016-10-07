@@ -36,5 +36,5 @@ def getnews(name, limit=99):
             pics=[]
             for image in each['images']:
                     pics.append(image['url'])
-            dic[each['title']]=[each['publisher'],each['pcUrl'],pics]
+            dic[each['title']+' '+each['publisher']+' '+each['pcUrl']]=pics
     return dic
