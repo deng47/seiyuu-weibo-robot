@@ -1,309 +1,202 @@
-from weibo import Client
-import urllib.request
-import urllib.parse
-from suzaki import *
-from taneda import *
-from nishi import *
-from sakura import *
-import time
-import datetime
-from bilisuzaki import *
-from bilinishi import *
-from bilitaneda import *
-from bilisakura import *
-from tumblrsuzaki import *
-from tumblrnishi import *
-from tumblrtaneda import *
-from tumblrsakura import *
-from suzakinow import *
+#!/usr/local/bin/python3
+# -*- coding: utf-8 -*-
 
+import time, datetime
+from weibo_login import *
+from sendweibo import *
+from news import *
+from bilibili import *
+from tumblr import *
+from twitterspider import *
+from poollog import *
 
-#取得微博应用权限
-c = Client()
-print(c.authorize_url)
-c.set_code(input("Input code:"))
-token = c.token
-
-start_time=datetime.datetime.now()
-print(time.asctime( time.localtime(time.time()) ),'开始运行')
-
-#设立新闻抓取新闻列表和b站视频列表及汤不热图片列表
-newspool=[]
-count=0
-avpool=[]
-avcount=0
-tumblrpool=[]
-tumblrcount=0
-nowpool=[]
-nowcount=0
-
-warning='Warning: 图片来自汤不热，标签内容比较混乱，可能会对不上'
-
-while True:
-
-    #容错
-    try:
-        
-        #获取洲崎绫now、各人的汤不热、b站最新视频及新闻列表，加上关键字后发微博
-               
-        #洲崎绫now
-        nowdic=getnow()
-        
-        for content in nowdic:
-            if content not in nowpool and nowdic[content]!=None:
-                try:
-                    req=urllib.request.Request(nowdic[content])
-                    res=urllib.request.urlopen(req)
-                    print('now图片微博')
-                    c.post('statuses/upload', status='#洲崎綾#さんのなう  '+content+' http://now.ameba.jp/clown-happy/', pic=res)
-                    nowcount+=1
-                    print(datetime.datetime.now(),'now发送成功: ',content)
-                    nowpool.append(content)
-                    time.sleep(301)
-                except:
-                    print(time.asctime( time.localtime(time.time()) ),'达到upload上限，启动10分钟休眠后重试')
-                    time.sleep(600)
-                    continue   
-            elif content not in nowpool:
-                nowpool.append(content)
-                c.post('statuses/update', status='#洲崎綾#さんのなう  '+content+' http://now.ameba.jp/clown-happy/')
-                nowcount+=1
-                print(datetime.datetime.now(),'now发送成功: ',content)
-                time.sleep(60)                
-               
-        #洲崎绫
-        tumblr=suzakipic()
-        
-        for content in tumblr:
-            if content not in tumblrpool:
-                try:
-                    req=urllib.request.Request(tumblr[content])
-                    res=urllib.request.urlopen(req)
-                    print('尝试发汤不热图片微博')
-                    c.post('statuses/upload', status=content, pic=res)
-                    tumblrcount+=1
-                    print(datetime.datetime.now(),'发送成功: ',content)
-                    tumblrpool.append(content)
-                    time.sleep(301)
-                except:
-                    print(time.asctime( time.localtime(time.time()) ),'达到upload上限，启动10分钟休眠后重试')
-                    time.sleep(600)
-                    continue            
-        
-        suzakivideos=avsuzaki()[:4]
-        
-        for link in suzakivideos:
-            if link not in avpool:
-                avpool.append(link)
-                c.post('statuses/update', status='#洲崎绫# '+link)
-                avcount+=1
-                print(datetime.datetime.now(),'发送成功: ',link)
-                time.sleep(60)
-                
-        suzakidic=getsuzaki()
-        
-        for title in suzakidic:
-            if title in newspool:
-                continue
-            else:
-                contents='#洲崎绫# '+title+suzakidic[title][0]+suzakidic[title][2]
-                piclink=suzakidic[title][3]
-                try:
-                    req=urllib.request.Request(piclink)
-                    res=urllib.request.urlopen(req)
-                    print('尝试发微博')
-                    c.post('statuses/upload', status=contents, pic=res)
-                    count+=1
-                    print(datetime.datetime.now(),'发送成功: ',title)
-                    newspool.append(title)
-                    time.sleep(301)
-                except:
-                    print(time.asctime( time.localtime(time.time()) ),'达到upload上限，启动10分钟休眠后重试')
-                    time.sleep(600)
-                    continue
-
-        #西明日香    
-        tumblr=nishipic()
-        
-        for content in tumblr:
-            if content not in tumblrpool:
-                try:
-                    req=urllib.request.Request(tumblr[content])
-                    res=urllib.request.urlopen(req)
-                    print('尝试发汤不热图片微博')
-                    c.post('statuses/upload', status=content, pic=res)
-                    tumblrcount+=1
-                    print(datetime.datetime.now(),'发送成功: ',content)
-                    tumblrpool.append(content)
-                    time.sleep(301)
-                except:
-                    print(time.asctime( time.localtime(time.time()) ),'达到upload上限，启动10分钟休眠后重试')
-                    time.sleep(600)
-                    continue            
-
-        nishivideos=avnishi()[:4]
-        
-        for link in nishivideos:
-            if link not in avpool:
-                avpool.append(link)
-                c.post('statuses/update', status='#西明日香# '+link)
-                avcount+=1
-                print(datetime.datetime.now(),'发送成功: ',link)
-                time.sleep(60)            
-        
-        nishidic=getnishi()
-        
-        for title in nishidic:
-            if title in newspool:
-                continue
-            else:
-                contents='#西明日香# '+title+nishidic[title][0]+nishidic[title][2]
-                piclink=nishidic[title][3]
-                try:
-                    req=urllib.request.Request(piclink)
-                    res=urllib.request.urlopen(req)
-                    print('尝试发微博')
-                    c.post('statuses/upload', status=contents, pic=res)
-                    count+=1
-                    print(datetime.datetime.now(),'发送成功: ',title)
-                    newspool.append(title)
-                    time.sleep(301)
-                except:
-                    print(time.asctime( time.localtime(time.time()) ),'达到upload上限，启动10分钟休眠后重试')
-                    time.sleep(600)
-                    continue
-                
-        #種田梨沙
-        tumblr=tanedapic()
-        
-        for content in tumblr:
-            if content not in tumblrpool:
-                try:
-                    req=urllib.request.Request(tumblr[content])
-                    res=urllib.request.urlopen(req)
-                    print('尝试发汤不热图片微博')
-                    c.post('statuses/upload', status=content, pic=res)
-                    tumblrcount+=1
-                    print(datetime.datetime.now(),'发送成功: ',content)
-                    tumblrpool.append(content)
-                    time.sleep(301)
-                except:
-                    print(time.asctime( time.localtime(time.time()) ),'达到upload上限，启动10分钟休眠后重试')
-                    time.sleep(600)
-                    continue                 
-        
-        tanedavideos=avtaneda()[:4]
-        
-        for link in tanedavideos:
-            if link not in avpool:
-                avpool.append(link)
-                c.post('statuses/update', status='#種田梨沙# '+link)
-                avcount+=1
-                print(datetime.datetime.now(),'发送成功: ',link)
-                time.sleep(60)            
-                
-        tanedadic=gettaneda()
-        
-        for title in tanedadic:
-            if title in newspool:
-                continue
-            else: 
-                contents='#種田梨沙# '+title+tanedadic[title][0]+tanedadic[title][2]
-                piclink=tanedadic[title][3]
-                try:
-                    req=urllib.request.Request(piclink)
-                    res=urllib.request.urlopen(req)
-                    print('尝试发微博')
-                    c.post('statuses/upload', status=contents, pic=res)
-                    count+=1
-                    print(datetime.datetime.now(),'发送成功: ',title)
-                    newspool.append(title)
-                    time.sleep(301)
-                except:
-                    print(time.asctime( time.localtime(time.time()) ),'达到upload上限，启动10分钟休眠后重试')
-                    time.sleep(600)
-                    continue            
-        
-        #佐倉綾音
-        tumblr=sakurapic()
-        
-        for content in tumblr:
-            if content not in tumblrpool:
-                try:
-                    req=urllib.request.Request(tumblr[content])
-                    res=urllib.request.urlopen(req)
-                    print('尝试发汤不热图片微博')
-                    c.post('statuses/upload', status=content, pic=res)
-                    tumblrcount+=1
-                    print(datetime.datetime.now(),'发送成功: ',content)
-                    tumblrpool.append(content)
-                    time.sleep(301)
-                except:
-                    print(time.asctime( time.localtime(time.time()) ),'达到upload上限，启动10分钟休眠后重试')
-                    time.sleep(600)
-                    continue               
-        
-        sakuravideos=avsakura()[:4]
-        
-        for link in sakuravideos:
-            if link not in avpool:
-                avpool.append(link)
-                c.post('statuses/update', status='#佐倉綾音# '+link)
-                avcount+=1
-                print(datetime.datetime.now(),'发送成功: ',link)
-                time.sleep(60)     
-        
-        sakuradic=getsakura()
-
-        for title in sakuradic:
-            if title in newspool:
-                continue
-            else:
-                contents='#佐倉綾音# '+title+sakuradic[title][0]+sakuradic[title][2]
-                piclink=sakuradic[title][3]
-                try:
-                    req=urllib.request.Request(piclink)
-                    res=urllib.request.urlopen(req)
-                    print('尝试发微博')
-                    c.post('statuses/upload', status=contents, pic=res)
-                    count+=1
-                    print(datetime.datetime.now(),'发送成功: ',title)
-                    newspool.append(title)
-                    time.sleep(301)
-                except:
-                    print(time.asctime( time.localtime(time.time()) ),'达到upload上限，启动10分钟休眠后重试')
-                    time.sleep(600)
-                    continue    
-
-        #更新列表库           
-        if len(avpool)>20:
-            avpool=avpool[-20:]            
-                       
-        if len(newspool)>20:
-            newspool=newspool[-20:]
-
-        if len(tumblrpool)>20:
-            tumblrpool=tumblrpool[-20:] 
-                
-        if len(nowpool)>5:
-            nowpool=nowpool[-5:] 
-
-        #打印运行状态
-        end_time=datetime.datetime.now()
-        print(time.asctime( time.localtime(time.time()) ),'运行中')
-        print('累计发送新闻链接微博%d条、B站链接微博%d条、汤不热图片%d张、now状态%d条' % (count,avcount,tumblrcount,nowcount))
-        print('累计运行时间：',(end_time-start_time))
-        
-        weibocount=count+avcount+tumblrcount+nowcount
-        runtime=end_time-start_time
-        
-        c.post('statuses/update', status='#运行状态# 累计运行时间：'+runtime+'  累计发送微博：'+weibocount)
-        time.sleep(3600)
+def updatetwitter(name, tag):
+    global count, limit, pool
+    try:        
+        weibos=spider(name, limit)
+        for each in weibos:
+            if each not in pool:
+                count=send(count, pool, tag, each, weibos[each])
 
     except:
-        print(time.asctime( time.localtime(time.time()) ),'出错，15分钟后重试')
-        time.sleep(900)
-        continue
+        log(str(time.asctime( time.localtime(time.time())))+' !!!!!更新%s出错，休眠%s秒跳过!!!!!\n' % (tag, str(pausetime)))
+        time.sleep(pausetime)
+        
+def updatetumblr(name, tag):
+    global count, limit, pool
+    try:
+        weibos=gettumblr(name, limit)
+        for each in weibos:
+            if each not in pool:
+                count=send(count, pool, tag, each, weibos[each])
+                
+    except:
+        log(str(time.asctime( time.localtime(time.time())))+' !!!!!更新%s出错，休眠%s秒跳过!!!!!\n' % (tag, str(pausetime)))
+        time.sleep(pausetime)        
+        
+def updatenews(name, tag):
+    global count, limit, pool
+    try:
+        weibos=getnews(name, limit)
+        for each in weibos:
+            if each not in pool:
+                count=send(count, pool, tag, each, weibos[each])
+
+    except:
+        log(str(time.asctime( time.localtime(time.time())))+' !!!!!更新%s出错，休眠%s秒跳过!!!!!\n' % (tag, str(pausetime)))
+        time.sleep(pausetime)   
+
+def updatebilibili(name, tag):
+    global count, limit, pool  
+    try:
+        weibos=getbili(name, limit)
+        for each in weibos:
+            if each not in pool:
+                count=send(count, pool, tag, each, weibos[each])
+                
+    except:
+        log(str(time.asctime( time.localtime(time.time())))+' !!!!!更新%s出错，休眠%s秒跳过!!!!!\n' % (tag, str(pausetime)))
+        time.sleep(pausetime)         
+
+
+
+#设立抓取库
+log('+++++++++++++++++++++++++++++++++++++++++++++\n+++++'+str(time.asctime( time.localtime(time.time())))+' 程序启动  +++++\n+++++++++++++++++++++++++++++++++++++++++++++\n')
+limit=7
+pool=[]
+count=0
+pausetime=10
+start_time=datetime.datetime.now()
+
+try:
+    file = open('checkpoint.txt','r', encoding='utf-8')
+    pool = eval(file.read())
+    file.close()
+    print('读取更新记录')
+except:
+    pass
+
+
+print(time.asctime(time.localtime(time.time())),' +++++ 循环开始 +++++')
+
+#更新twitter
+
+name='seaside_c'
+tag='#シーサイド コミュニケーションズ#twitter:'
+updatetwitter(name, tag)    
+
+name='kinmosa_anime'
+tag='#ＴＶアニメ「きんいろモザイク」#twitter:'
+updatetwitter(name, tag)
+
+name='suzakinishi'
+tag='#洲崎西#twitter:'
+updatetwitter(name, tag)
+    
+name='suzakiaya7_6'
+tag='「洲崎綾の7.6」公式twitter:'
+updatetwitter(name, tag)
+    
+name='nishi_deliradi'
+tag='#西明日香のデリケートゾーン！#twitter:'
+updatetwitter(name, tag)
+
+name='nishiasuka_info'
+tag='#西明日香#公式ツイッター:'
+updatetwitter(name, tag)   
+    
+name='seaside_ueki'
+tag='#植木雄一郎#twitter:'
+updatetwitter(name, tag) 
+    
+name='akekodao'
+tag='#明坂聡美#twitter:'
+updatetwitter(name, tag)
+
+#洲崎绫now    
+try:
+
+    weibos=getnow(limit+3)
+    for each in weibos:
+        if each not in pool:
+            tag='#洲崎綾#さんのなうhttp://now.ameba.jp/clown-happy/'
+            
+            count=send(count, pool, tag, each, weibos[each])
+            
+except:
+    log(str(time.asctime( time.localtime(time.time())))+' !!!!!更新%s出错，休眠%s秒跳过!!!!!\n' % (tag, str(pausetime)))
+    time.sleep(pausetime)                
 
     
+#更新 tumblr
+
+name='洲崎綾'
+tag='#洲崎綾##tumblr#'
+updatetumblr(name, tag)
+
+name='西明日香'
+tag='#西明日香##tumblr#'
+updatetumblr(name, tag)
+
+name='種田梨沙'
+tag='#種田梨沙##tumblr#'
+updatetumblr(name, tag)
+
+name='佐倉綾音'
+tag='#佐倉綾音##tumblr#'
+updatetumblr(name, tag)   
+
+
+#更新news
+
+name='洲崎綾'
+tag='#洲崎绫##News#'   
+updatenews(name, tag)
+
+name='西明日香'
+tag='#西明日香##News#'   
+updatenews(name, tag)
+
+name='種田梨沙'
+tag='#種田梨沙##News#'   
+updatenews(name, tag)
+
+name='佐倉綾音'
+tag='#佐倉綾音##News#'   
+updatenews(name, tag)
+
+
+#更新bilibili
+
+name='洲崎西'
+tag='#洲崎西##bilibili#'        
+updatebilibili(name, tag)
+
+name='洲崎绫'
+tag='#洲崎绫##bilibili#'        
+updatebilibili(name, tag)
+
+name='西明日香'
+tag='#西明日香##bilibili#'        
+updatebilibili(name, tag)
+
+name='種田梨沙'
+tag='#種田梨沙##bilibili#'        
+updatebilibili(name, tag)
+
+name='佐倉綾音'
+tag='#佐倉綾音##bilibili#'        
+updatebilibili(name, tag)   
+
     
+#更新列表库           
+if len(pool)>limit*1000:
+    pool=pool[-limit*1000:]
+                
+#打印运行状态
+end_time=datetime.datetime.now()
+log('+++++\n+++++'+str(time.asctime( time.localtime(time.time())))+' 运行时间：'+str(end_time-start_time)+' 发送微博%d条+++++\n+++++\n' % count)
+
+save(pool)
+print(time.asctime(time.localtime(time.time())),' 循环执行完毕，发送微博%s条' % (str(count)))		
+
