@@ -8,13 +8,13 @@ user_agent = (
 )
 
 # 微博账号和密码
-USER_NAME = "0014158602344"
-PASSWD = "Deng474wb"
+USER_NAME = "?"
+PASSWD = "?"
 
 
 # 上传图片上限
 max_images = 9
 
 # twitter账号和密码
-USERNAME = 'deng47@gmail.com'    
-PASSWORD = '123qweasdzxc'
+USERNAME = '?'    
+PASSWORD = '?'
