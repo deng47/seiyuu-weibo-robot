@@ -113,6 +113,11 @@ tag='「洲崎綾の7.6」公式twitter:'
 updatetwitter(name, tag)
 update(pool, tag, limit)
 
+name='suzaki_aya'
+tag='#洲崎綾#三十路記念twitter:'
+updatetwitter(name, tag)
+update(pool, tag, limit)
+
 name='nishi_deliradi'
 tag='#西明日香のデリケートゾーン！#twitter:'
 updatetwitter(name, tag)

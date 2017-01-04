@@ -12,13 +12,13 @@ def readpool(pool, tag):
 def log(record):
     try:
         file = open('/home/pi/test/seiyuu2.0/record/'+'log.txt','a', encoding='utf-8')
-        file.write(str(record)+'\n')
+        file.write(str(record))
         file.close()
     except:
         pass
         
 def update(pool, tag, limit):
-    if len(pool)>limit*2:
-        pool=pool[-limit*2:]  
+    if len(pool)>limit*3:
+        pool=pool[-limit*3:]  
     file = open('/home/pi/test/seiyuu2.0/record/'+tag[0:-1]+'.txt','w', encoding='utf-8')
     file.write(str(pool))
