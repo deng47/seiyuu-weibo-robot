@@ -20,9 +20,9 @@ def getbili(name, limit=99):
         link = tag.get('href')[4:-2]
         if link.startswith('www.bilibili') and re.search(r'[^\x00-\xff]',tag.text)!=None:
             if link.endswith('/'):
-                dic[tag.text[10:-8]+link] = []
+                dic[tag.text[10:-8]+' http://'+link] = []
             else:
-                dic[tag.text[10:-8]+link+'/'] = []
+                dic[tag.text[10:-8]+' http://'+link+'/'] = []
 
     return dic
 
