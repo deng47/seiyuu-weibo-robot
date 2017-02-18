@@ -8,13 +8,13 @@ user_agent = (
 )
 
 # 微博账号和密码
-USER_NAME = "123"
-PASSWD = "qwe"
+USER_NAME = ""
+PASSWD = ""
 
 
 # 上传图片上限
 max_images = 9
 
 # twitter账号和密码
-USERNAME = '123'    
-PASSWORD = 'qwe'
+USERNAME = ''    
+PASSWORD = ''
