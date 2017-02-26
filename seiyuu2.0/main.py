@@ -195,6 +195,7 @@ if len(pool)>limit*1000:
                 
 #打印运行状态
 end_time=datetime.datetime.now()
+# log records
 log('+++++\n+++++'+str(time.asctime( time.localtime(time.time())))+' 运行时间：'+str(end_time-start_time)+' 发送微博%d条+++++\n+++++\n' % count)
 
 save(pool)
