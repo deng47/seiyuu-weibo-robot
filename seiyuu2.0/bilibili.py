@@ -4,6 +4,8 @@ from bs4 import BeautifulSoup
 import re
 
 def getbili(name, limit=99):
+        
+    dic={}
     url='http://search.bilibili.com/ajax_api/video?keyword=' + urllib.parse.quote(name) + '&order=pubdate&page=1&_=1470859017484'
     req=urllib.request.Request(url)
     req.add_header('User-Agent','Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/50.0.2661.94 Safari/537.36')
@@ -12,19 +14,17 @@ def getbili(name, limit=99):
     soup=BeautifulSoup(html, "html.parser")
     tags=soup.select('a')
 
-    videolist=[]
-
     for tag in tags:
-        raw=tag.get('href',None)
-        if raw!=None and len(raw)>37:
-            raw=re.findall(r'http.+av.+/',raw)
-            if len(raw)>0 and raw[0] not in videolist:
-                videolist.append(raw[0])
+        if len(dic)+1 > limit:
+            break
+        link = tag.get('href')[2:-2]
+        if link.startswith('http://www.bilibili') and re.search(r'[^\x00-\xff]',tag.text)!=None:
+            if link.endswith('/'):
+                dic[tag.text[10:-8]+link] = []
+            else:
+                dic[tag.text[10:-8]+link+'/'] = []
 
-    return videolist[:limit+1]
-
-
-
+    return dic
 
 
 
