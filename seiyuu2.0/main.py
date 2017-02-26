@@ -8,7 +8,7 @@ from now import *
 from twitterspider import *
 
 
-#设立抓取库
+#设立抓取库，集中记录
 pool=[]
 count=0
 pausetime=30
