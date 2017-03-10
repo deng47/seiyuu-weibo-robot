@@ -30,4 +30,3 @@ def getnow(limit=99):
         else:
             dic[contents[index]]=[]
     return dic
-    

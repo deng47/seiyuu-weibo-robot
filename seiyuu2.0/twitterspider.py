@@ -69,5 +69,5 @@ def spider(twitter_name, limit=99):
                 dic[message]=pics
         if len(dic)+1>limit:
             return dic            
-
+    return dic
 
