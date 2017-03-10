@@ -22,7 +22,7 @@ def updatetwitter(name, tag):
                 count=send(count, pool, tag, each, pausetime, weibos[each])
 
     except:
-        log(str(time.asctime( time.localtime(time.time())))+' !!!!!fail to update %s，sleep %s seconds!!!!!\n' % (tag, str(pausetime)))
+        log(str(time.asctime( time.localtime(time.time())))+' !!!!!更新%s出错，休眠%s秒跳过!!!!!\n' % (tag, str(pausetime)))
         time.sleep(pausetime)
         
 def updatetumblr(name, tag):
@@ -35,7 +35,7 @@ def updatetumblr(name, tag):
                 count=send(count, pool, tag, each, pausetime, weibos[each])
                 
     except:
-        log(str(time.asctime( time.localtime(time.time())))+' !!!!!fail to update %s，sleep %s seconds!!!!!\n' % (tag, str(pausetime)))
+        log(str(time.asctime( time.localtime(time.time())))+' !!!!!更新%s出错，休眠%s秒跳过!!!!!\n' % (tag, str(pausetime)))
         time.sleep(pausetime)        
         
 def updatenews(name, tag):
@@ -48,7 +48,7 @@ def updatenews(name, tag):
                 count=send(count, pool, tag, each, pausetime, weibos[each])
 
     except:
-        log(str(time.asctime( time.localtime(time.time())))+' !!!!!fail to update %s，sleep %s seconds!!!!!\n' % (tag, str(pausetime)))
+        log(str(time.asctime( time.localtime(time.time())))+' !!!!!更新%s出错，休眠%s秒跳过!!!!!\n' % (tag, str(pausetime)))
         time.sleep(pausetime)   
 
 def updatebilibili(name, tag):
@@ -61,7 +61,7 @@ def updatebilibili(name, tag):
                 count=send(count, pool, tag, each, pausetime, weibos[each])
                 
     except:
-        log(str(time.asctime( time.localtime(time.time())))+' !!!!!fail to update %s，sleep %s seconds!!!!!\n' % (tag, str(pausetime)))
+        log(str(time.asctime( time.localtime(time.time())))+' !!!!!更新%s出错，休眠%s秒跳过!!!!!\n' % (tag, str(pausetime)))
         time.sleep(pausetime)         
 
 def updateevent(name, tag):
@@ -77,20 +77,21 @@ def updateevent(name, tag):
             pass
                 
     except:
-        log(str(time.asctime( time.localtime(time.time())))+' !!!!!fail to update %s，sleep %s seconds!!!!!\n' % (tag, str(pausetime)))
+        log(str(time.asctime( time.localtime(time.time())))+' !!!!!更新%s出错，休眠%s秒跳过!!!!!\n' % (tag, str(pausetime)))
         time.sleep(pausetime)    
         
 
-#setup update pool
-log('+++++++++++++++++++++++++++++++++++++++++++++\n+++++'+str(time.asctime( time.localtime(time.time())))+' program starts  +++++\n+++++++++++++++++++++++++++++++++++++++++++++\n')
+#设立抓取库
+log('+++++++++++++++++++++++++++++++++++++++++++++\n+++++'+str(time.asctime( time.localtime(time.time())))+' 程序启动  +++++\n+++++++++++++++++++++++++++++++++++++++++++++\n')
 limit=7
 pool=[]
 count=0
 pausetime=5
 start_time=datetime.datetime.now()
 
+print(time.asctime(time.localtime(time.time())),' +++++ 循环开始 +++++')
 
-#update twitter news
+#更新twitter
 
 name='seaside_c'
 tag='#シーサイド コミュニケーションズ#twitter:'
@@ -137,7 +138,7 @@ tag='#明坂聡美#twitter:'
 updatetwitter(name, tag)
 update(pool, tag, limit)
 
-#update "now" blog  
+#洲崎绫now    
 try:
     tag='#洲崎綾#さんのなうhttp://now.ameba.jp/clown-happy/'
     pool=readpool(pool, '#洲崎綾#さんのなう')
@@ -152,7 +153,7 @@ except:
     time.sleep(pausetime)                
 
     
-#update tumblr
+#更新 tumblr
 
 name='洲崎綾'
 tag='#洲崎綾##tumblr#'
@@ -175,7 +176,7 @@ updatetumblr(name, tag)
 update(pool, tag, limit)
 
 
-#update news
+#更新news
 
 name='洲崎綾'
 tag='#洲崎绫##News#'   
@@ -198,7 +199,7 @@ updatenews(name, tag)
 update(pool, tag, limit)
 
 
-#update bilibili
+#更新bilibili
 
 name='洲崎西'
 tag='#洲崎西##bilibili#'        
@@ -225,7 +226,7 @@ tag='#佐倉綾音##bilibili#'
 updatebilibili(name, tag)   
 update(pool, tag, limit)
 
-#update event count down
+#更新event
 
 name='洲崎綾/3902'
 tag='#洲崎绫##Event countdown#'    
@@ -248,8 +249,9 @@ updateevent(name, tag)
 update(pool, tag, limit)
 
       
-#print result
+#打印运行状态
 end_time=datetime.datetime.now()
-log('+++++\n+++++'+str(time.asctime( time.localtime(time.time())))+' running time：'+str(end_time-start_time)+' send %d messages +++++\n+++++\n' % count)
-	
+log('+++++\n+++++'+str(time.asctime( time.localtime(time.time())))+' 运行时间：'+str(end_time-start_time)+' 发送微博%d条+++++\n+++++\n' % count)
+
+print(time.asctime(time.localtime(time.time())),' 循环执行完毕，发送微博%s条' % (str(count)))		
 
