@@ -33,7 +33,7 @@ def getevent(name):
         date=content[index].get_text()
         eventdate=datetime.datetime.strptime(date[1:11], '%Y-%m-%d')
         today=datetime.datetime.now()
-        countdown=(eventdate-today).days
+        countdown=(eventdate-today).days+1
             
         if countdown==1:
             actor=detail[index].get_text()
