@@ -65,7 +65,8 @@ def spider(twitter_name, limit=99):
             if len(tag.select('.AdaptiveMedia-photoContainer'))>0:
                 for each in tag.select('.AdaptiveMedia-photoContainer'):
                     pics.append(each.get('data-image-url'))
-            if re.search(r'[\u3041-\u30F6\u4E00-\u9FA0]',message)!=None:
+            # check if there are more than 3 japanese characters or KANJI in the message
+            if len(re.findall(r'[\u3041-\u30F6\u4E00-\u9FA0]',message))>3:
                 dic[message]=pics
         if len(dic)+1>limit:
             return dic            
