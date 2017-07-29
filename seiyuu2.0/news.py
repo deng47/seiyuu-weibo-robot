@@ -17,7 +17,7 @@ def getnews(name, limit=99):
 
     script=soup.select('script')
     #查找新闻列表部分代码
-    raw=script[7].text
+    raw=script[3].text
 
     start=raw.find('JSON.parse')+12
     end=raw.find('||')-2
