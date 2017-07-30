@@ -56,8 +56,9 @@ def send(count, pool, tag, each, pausetime,piclinks=[]):
         pids=pids.strip()
 
     #写入微博文字内容与上传图片pid
-    if len(message)-len(re.findall(r'[0-9A-z]',message))/2>140:
-        message=message[:138]+'...'
+    #字数限制
+    #if len(message)-len(re.findall(r'[0-9A-z]',message))/2>140:
+    #    message=message[:138]+'...'
     data = {
             "location": "v6_content_home",
             "appkey": "",
