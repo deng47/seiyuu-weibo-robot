@@ -8,7 +8,7 @@ def gettumblr(name, limit=99):
     
     url='https://www.tumblr.com/search/' + urllib.parse.quote(name) + '/recent'
 
-    html=urllib.request.urlopen(url).read().decode('utf8')
+    html=urllib.request.urlopen(url).read()
     soup = BeautifulSoup( html, "html.parser" )
     tags=soup.select('.photo')
 
