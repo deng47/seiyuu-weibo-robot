@@ -10,10 +10,8 @@ import re
 def getnews(name, limit=99):
 
     url='https://web.hackadoll.com/search?q=' + urllib.parse.quote(name)
-    req=urllib.request.Request(url)
-    res=urllib.request.urlopen(req)
-    webpage=res.read().decode('utf8')
-    soup=BeautifulSoup(webpage, "html.parser")
+    res=urllib.request.urlopen(url).read()
+    soup=BeautifulSoup(res, "html.parser")
 
     script=soup.select('script')
     #查找新闻列表部分代码
