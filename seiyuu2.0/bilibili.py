@@ -7,10 +7,7 @@ def getbili(name, limit=99):
         
     dic={}
     url='http://search.bilibili.com/ajax_api/video?keyword=' + urllib.parse.quote(name) + '&page=1&order=pubdate&tids_1=13&tids_2=152'
-    req=urllib.request.Request(url)
-    req.add_header('User-Agent','Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/50.0.2661.94 Safari/537.36')
-    response=urllib.request.urlopen(req)
-    html=response.read().decode('utf8')
+    html=urllib.request.urlopen(url).read()
     soup=BeautifulSoup(html, "html.parser")
     tags=soup.select('a')
 
