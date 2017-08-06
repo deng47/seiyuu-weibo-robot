@@ -14,19 +14,19 @@ def getevent(name):
     html=urllib.request.urlopen(url).read()
     soup=BeautifulSoup(html, "html.parser")
 
-    content=soup.find_all('div','date')
+    contents=soup.find_all('div','date')
     detail=soup.find_all('div','actor')
     place=soup.find_all('div','place')
     
     event={}
 
-    for index in range(len(content)):
-        title=re.findall(r'alt="(.*)" height',str(content[index]))[0]
-        pic=re.findall(r'src="(.*)" width',str(content[index]))[0]
+    for index, content in enumerate(contents):
+        title=re.findall(r'alt="(.*)" height',str(content))[0]
+        pic=re.findall(r'src="(.*)" width',str(content))[0]
         
         location=place[index].get_text().lstrip('\n ')
         
-        date=content[index].get_text()
+        date=content.get_text()
         eventdate=datetime.datetime.strptime(date[1:11], '%Y-%m-%d')
         today=datetime.datetime.now()
         countdown=(eventdate-today).days+1
