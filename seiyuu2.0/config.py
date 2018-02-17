@@ -14,7 +14,3 @@ PASSWD = ""
 
 # 上传图片上限
 max_images = 9
-
-# twitter账号和密码
-USERNAME = ''    
-PASSWORD = ''
