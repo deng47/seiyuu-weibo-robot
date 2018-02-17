@@ -3,13 +3,15 @@ import urllib.request
 from weibo_login import *
 import re
 from poollog import *
+import random
 
 #登录微博
 (session, uid) = wblogin()
 
-Referer = "http://www.weibo.com/u/%s/home?wvr=5" % uid
+Referer = "https://www.weibo.com/u/%s/home?wvr=5" % uid
 session.headers["Referer"] = Referer
-uploadurl = "http://picupload.service.weibo.com/interface/pic_upload.php?rotate=0&app=miniblog&s=json&mime=image/jpeg&data=1&wm="
+uploadurl = "https://picupload.weibo.com/interface/pic_upload.php?app=miniblog&s=json&mime=image/jpeg&data=1&wm="
+
 
 def send(count, pool, tag, each, pausetime,piclinks=[]):
     message=tag+each
@@ -74,9 +76,10 @@ def send(count, pool, tag, each, pausetime,piclinks=[]):
             }
 
     #发出微博
-    resp = session.post("http://www.weibo.com/aj/mblog/add?ajwvr=6&__rnd=%d" % int( time.time() * 1000),data=data)
+    resp = session.post("https://www.weibo.com/aj/mblog/add?ajwvr=6&__rnd=%d" % int( time.time() * 1000),data=data)
     weibo_json = re.search( '{.*}}', resp.text ).group(0)
     result = json.loads( weibo_json )
+    
     if result["code"]=='100000':
         count+=1
         pool.append(each)
@@ -84,6 +87,9 @@ def send(count, pool, tag, each, pausetime,piclinks=[]):
     else:
         log("!!!!!code: "+result["code"]+' '+str(time.asctime( time.localtime(time.time())))+' 发送失败： %s !!!!!\n' % message)
     
+    if random.randint(0,3) == 0:
+        pool.append(each)
+        
     time.sleep(pausetime)
     
     return count
