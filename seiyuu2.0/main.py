@@ -1,4 +1,4 @@
-#!/usr/local/bin/python3
+#!/usr/bin/python3
 # -*- coding: utf-8 -*-
 
 import time, datetime
@@ -21,7 +21,8 @@ def updatetwitter(name, tag):
             if each not in pool:
                 count=send(count, pool, tag, each, pausetime, weibos[each])
 
-    except:
+    except Exception as e:
+        print(e)
         log(str(time.asctime( time.localtime(time.time())))+' !!!!!更新%s出错，休眠%s秒跳过!!!!!\n' % (tag, str(pausetime)))
         time.sleep(pausetime)
         
@@ -34,7 +35,8 @@ def updatetumblr(name, tag):
             if each not in pool:
                 count=send(count, pool, tag, each, pausetime, weibos[each])
                 
-    except:
+    except Exception as e:
+        print(e)
         log(str(time.asctime( time.localtime(time.time())))+' !!!!!更新%s出错，休眠%s秒跳过!!!!!\n' % (tag, str(pausetime)))
         time.sleep(pausetime)        
         
@@ -47,7 +49,8 @@ def updatenews(name, tag):
             if each not in pool:
                 count=send(count, pool, tag, each, pausetime, weibos[each])
 
-    except:
+    except Exception as e:
+        print(e)
         log(str(time.asctime( time.localtime(time.time())))+' !!!!!更新%s出错，休眠%s秒跳过!!!!!\n' % (tag, str(pausetime)))
         time.sleep(pausetime)   
 
@@ -60,7 +63,8 @@ def updatebilibili(name, tag):
             if each not in pool:
                 count=send(count, pool, tag, each, pausetime, weibos[each])
                 
-    except:
+    except Exception as e:
+        print(e)
         log(str(time.asctime( time.localtime(time.time())))+' !!!!!更新%s出错，休眠%s秒跳过!!!!!\n' % (tag, str(pausetime)))
         time.sleep(pausetime)         
 
@@ -76,14 +80,15 @@ def updateevent(name, tag):
         else:
             pass
                 
-    except:
+    except Exception as e:
+        print(e)
         log(str(time.asctime( time.localtime(time.time())))+' !!!!!更新%s出错，休眠%s秒跳过!!!!!\n' % (tag, str(pausetime)))
         time.sleep(pausetime)    
         
 
 #设立抓取库
 log('+++++++++++++++++++++++++++++++++++++++++++++\n+++++'+str(time.asctime( time.localtime(time.time())))+' 程序启动  +++++\n+++++++++++++++++++++++++++++++++++++++++++++\n')
-limit=7
+limit=2
 pool=[]
 count=0
 pausetime=5
@@ -93,10 +98,10 @@ print(time.asctime(time.localtime(time.time())),' +++++ 循环开始 +++++')
 
 #更新twitter
 
-name='seaside_c'
-tag='#シーサイド コミュニケーションズ#twitter:'
-updatetwitter(name, tag)    
-update(pool, tag, limit)
+#name='seaside_c'
+#tag='#シーサイド コミュニケーションズ#twitter:'
+#updatetwitter(name, tag)    
+#update(pool, tag, limit)
 
 name='kinmosa_anime'
 tag='#ＴＶアニメ「きんいろモザイク」#twitter:'
@@ -128,10 +133,10 @@ tag='#西明日香#公式ツイッター:'
 updatetwitter(name, tag)   
 update(pool, tag, limit)
     
-name='seaside_ueki'
-tag='#植木雄一郎#twitter:'
-updatetwitter(name, tag) 
-update(pool, tag, limit)
+#name='seaside_ueki'
+#tag='#植木雄一郎#twitter:'
+#updatetwitter(name, tag) 
+#update(pool, tag, limit)
     
 name='akekodao'
 tag='#明坂聡美#twitter:'
@@ -139,18 +144,18 @@ updatetwitter(name, tag)
 update(pool, tag, limit)
 
 #洲崎绫now    
-try:
-    tag='#洲崎綾#さんのなうhttp://now.ameba.jp/clown-happy/'
-    pool=readpool(pool, '#洲崎綾#さんのなう')
-    weibos=getnow(limit+3)
-    for each in weibos:
-        if each not in pool:
-            count=send(count, pool, tag, each, pausetime, weibos[each])
-    update(pool, '#洲崎綾#さんのなう', limit)
-        
-except:
-    log(str(time.asctime( time.localtime(time.time())))+' !!!!!更新%s出错，休眠%s秒跳过!!!!!\n' % (tag, str(pausetime)))
-    time.sleep(pausetime)                
+#try:
+#    tag='#洲崎綾#さんのなうhttp://now.ameba.jp/clown-happy/'
+#    pool=readpool(pool, '#洲崎綾#さんのなう')
+#    weibos=getnow(limit+3)
+#    for each in weibos:
+#        if each not in pool:
+#            count=send(count, pool, tag, each, pausetime, weibos[each])
+#    update(pool, '#洲崎綾#さんのなう', limit)
+#        
+#except:
+#    log(str(time.asctime( time.localtime(time.time())))+' !!!!!更新%s出错，休眠%s秒跳过!!!!!\n' % (tag, str(pausetime)))
+#    time.sleep(pausetime)                
 
     
 #更新 tumblr
@@ -201,10 +206,10 @@ update(pool, tag, limit)
 
 #更新bilibili
 
-name='洲崎西'
-tag='#洲崎西##bilibili#'        
-updatebilibili(name, tag)
-update(pool, tag, limit)
+#name='洲崎西'
+#tag='#洲崎西##bilibili#'        
+#updatebilibili(name, tag)
+#update(pool, tag, limit)
 
 name='洲崎绫'
 tag='#洲崎绫##bilibili#'        
