@@ -7,3 +7,6 @@ Collect seiyuu news from different websites and post them on sina weibo, without
 
 
 Sample: weibo @自动化声豚
+
+# UPDATE
+- check my serverless version here https://github.com/deng47/aws-serverless-seiyuu-weibobot
